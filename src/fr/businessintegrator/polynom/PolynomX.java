@@ -186,14 +186,14 @@ public class PolynomX extends Polynom implements Cloneable {
     }
 
     public PolynomX multiply(PolynomX other) throws NoCoefficientException, CloneNotSupportedException {
-        /*if (other instanceof PolynomY) {
+        if (other instanceof PolynomY) {
             PolynomX result = (PolynomX) clone();
             if (result.products == null) {
                 result.products = new LinkedList<PolynomY>();
             }
             result.products.add((PolynomY) other);
             return result;
-        }*/
+        }
 
         PolynomX result = new PolynomX(this.getP(), null);
         for (Map.Entry<Double, Monom> entry : other.getMonoms().entrySet()) {
@@ -214,23 +214,22 @@ public class PolynomX extends Polynom implements Cloneable {
                     }
                     Double newdegre = degre + currentDegre;
                     MonomX olderMonomX = (MonomX) result.getMonoms().get(newdegre);
-                    if (olderMonomX != null) {
+                    if (olderMonomX != null || BigInteger.ZERO.compareTo(olderMonomX.getCoef()) != 0) {
                         BigInteger co1 = (currentCoef.multiply(coefficient).multiply(olderMonomX.getCoef())).mod(getP());
                         //result.getMonoms().put(newdegre, new MonomX(co1, newdegre, getP()));
-                        
                         if (co1.compareTo(BigInteger.ZERO) == 0) {
-                    result.monoms.remove(degre);
-                } else {
-                    result.monoms.put(degre, new MonomX(co1, degre, getP()));
-                }
+                            result.monoms.remove(degre);
+                        } else {
+                            result.monoms.put(degre, new MonomX(co1, degre, getP()));
+                        }
                     } else {
                         BigInteger co1 = (currentCoef.multiply(coefficient)).mod(getP());
                         //result.getMonoms().put(newdegre, new MonomX(co1, newdegre, getP()));
-                         if (co1.compareTo(BigInteger.ZERO) == 0) {
-                    result.monoms.remove(degre);
-                } else {
-                    result.monoms.put(degre, new MonomX(co1, degre, getP()));
-                }
+                        if (co1.compareTo(BigInteger.ZERO) == 0) {
+                            result.monoms.remove(degre);
+                        } else {
+                            result.monoms.put(degre, new MonomX(co1, degre, getP()));
+                        }
                     }
                 }
             }
@@ -527,7 +526,9 @@ public class PolynomX extends Polynom implements Cloneable {
                 result = result.add(cof.multiply(x.modPow(new BigInteger("" + key.intValue()), getP())));
             }
         }
-        if(result == null){ return null;}
+        if (result == null) {
+            return null;
+        }
         return result.mod(getP());
     }
 
@@ -575,15 +576,15 @@ public class PolynomX extends Polynom implements Cloneable {
     }
 
     PolynomX multiplyX() {
-   
-         PolynomX result = new PolynomX(this.getP(), null);
+
+        PolynomX result = new PolynomX(this.getP(), null);
         for (Map.Entry<Double, Monom> entry : getMonoms().entrySet()) {
             Double degre = entry.getKey();
             MonomX monom = (MonomX) entry.getValue();
-            result.monoms.put(degre+1, monom);
+            result.monoms.put(degre + 1, monom);
         }
-       return result;
-    
+        return result;
+
     }
 
 }

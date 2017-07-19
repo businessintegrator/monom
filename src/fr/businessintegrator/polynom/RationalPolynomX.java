@@ -122,7 +122,7 @@ public class RationalPolynomX {
      */
      public RationalPolynomX multiply(RationalPolynomX other) throws NoCoefficientException, CloneNotSupportedException{
         if (other == null) return null;
-         PolynomX newMerator = getNumerateur().multiply(other.getNumerateur());
+        PolynomX newMerator = getNumerateur().multiply(other.getNumerateur());
         PolynomX newDenoMinator = getDenominateur().multiply(other.getDenominateur());
         return new RationalPolynomX(newMerator, newDenoMinator,getNumerateur().getP());
     }
