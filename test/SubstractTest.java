@@ -51,9 +51,7 @@ public class SubstractTest {
             
             
             Assert.assertEquals("sous limit", res, PolynomX.createZERO(p));
-        } catch (NoCoefficientException ex) {
-             Assert.fail(ex.getMessage());
-        } catch (CloneNotSupportedException ex) {
+        } catch (Exception ex) {
              Assert.fail(ex.getMessage());
         }
     }
@@ -88,9 +86,7 @@ public class SubstractTest {
             
             
             Assert.assertEquals("sous limit", res, PolynomX.createZERO(p));
-        } catch (NoCoefficientException ex) {
-             Assert.fail(ex.getMessage());
-        } catch (CloneNotSupportedException ex) {
+        } catch (Exception ex) {
              Assert.fail(ex.getMessage());
         }
     }
@@ -119,7 +115,7 @@ public class SubstractTest {
               Assert.assertEquals("add internal", b, badd);
             
            
-        } catch (CloneNotSupportedException ex) {
+        } catch (Exception ex) {
              Assert.fail(ex.getMessage());
         }
             
@@ -149,7 +145,7 @@ public class SubstractTest {
               Assert.assertEquals("add internal", b, badd);
             
            
-        } catch (CloneNotSupportedException ex) {
+        } catch (Exception ex) {
              Assert.fail(ex.getMessage());
         }
             
@@ -177,10 +173,9 @@ public class SubstractTest {
             PolynomX badd = new PolynomX(p, monomsRes);
             Assert.assertEquals("soustraction", b2, badd);
            
-        } catch (NoCoefficientException ex) {
+        } catch (Exception ex) {
              Assert.fail(ex.getMessage());
-        } catch (CloneNotSupportedException ex) {
-             Assert.fail(ex.getMessage());
+        
         }
             
             
@@ -207,30 +202,33 @@ public class SubstractTest {
             
             Assert.assertEquals("multiplication", bcarre, b2);
             
-        } catch (NoCoefficientException ex) {
+        } catch (Exception ex) {
             Assert.fail(ex.getMessage());
-        } catch (CloneNotSupportedException ex) {
-              Assert.fail(ex.getMessage());
           }
     }
     @Test
     public void multiplication(){
         try {
             BigInteger p = new BigInteger("11");
-            MonomX[] monoms = new MonomX[]{new MonomX(new BigInteger("1"), 1.0, p), new MonomX(new BigInteger("1"), 0.0, p)};
+            MonomX[] monoms = 
+                    new MonomX[]{
+                        new MonomX(new BigInteger("1"), 1.0, p), 
+                        new MonomX(new BigInteger("1"), 0.0, p)};
             PolynomX b = new PolynomX(p, monoms);
             System.out.println("b(x)= " + b);
             PolynomX b2 = b.multiply(b);
             
-            MonomX[] monomsRes = new MonomX[]{new MonomX(new BigInteger("1"), 2.0, p),new MonomX(new BigInteger("2"), 1.0, p), new MonomX(new BigInteger("1"), 0.0, p)};
+            MonomX[] monomsRes = 
+                    new MonomX[]{new MonomX(new BigInteger("1"), 2.0, p),
+                        new MonomX(new BigInteger("2"), 1.0, p), 
+                        new MonomX(new BigInteger("1"), 0.0, p)};
             PolynomX bcarre = new PolynomX(p, monomsRes);
             
             Assert.assertEquals("carre", bcarre, b2);
             
-        } catch (NoCoefficientException ex) {
+        } catch (Exception ex) {
             Assert.fail(ex.getMessage());
-        } catch (CloneNotSupportedException ex) {
-              Assert.fail(ex.getMessage());
+        
           }
         
         try {
@@ -246,9 +244,7 @@ public class SubstractTest {
             
             Assert.assertEquals("carre", bcarre, b2);
             
-        } catch (NoCoefficientException ex) {
-            Assert.fail(ex.getMessage());
-        } catch (CloneNotSupportedException ex) {
+        } catch (Exception ex) {
               Assert.fail(ex.getMessage());
           }
         
@@ -288,9 +284,8 @@ public class SubstractTest {
             
             Assert.assertEquals("reste", results[1], r);
             Assert.assertEquals("qurien", results[0], q);
-        } catch (NoCoefficientException ex) {
-            Assert.fail(ex.getMessage());
-        } catch (CloneNotSupportedException ex) {
+        } catch (Exception ex) {
+            
              Assert.fail(ex.getMessage());
         }
      
@@ -325,9 +320,7 @@ public class SubstractTest {
             
             
             Assert.assertEquals("soustraction", exp, res);
-        } catch (NoCoefficientException ex) {
-             Assert.fail(ex.getMessage());
-        } catch (CloneNotSupportedException ex) {
+        } catch (Exception ex) {
              Assert.fail(ex.getMessage());
         }
     }
@@ -361,9 +354,7 @@ public class SubstractTest {
             
             
             Assert.assertEquals("soustraction", exp, res);
-        } catch (NoCoefficientException ex) {
-             Assert.fail(ex.getMessage());
-        } catch (CloneNotSupportedException ex) {
+        } catch (Exception ex) {
              Assert.fail(ex.getMessage());
         }
     }

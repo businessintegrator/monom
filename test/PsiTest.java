@@ -95,7 +95,7 @@ public class PsiTest {
                    RationalPolynomX five5 = foury4.multiply(two);
                    RationalPolynomX five55 = five5.subtract(three.pow(3, p));
                    Assert.assertEquals("Pside 5", five55, poli);
-                  RationalPolynomX five  = new RationalPolynomX(new PolynomX(p,
+                  /*RationalPolynomX five  = new RationalPolynomX(new PolynomX(p,
                           new MonomX((new BigInteger("23")), 0.0, p),
                           new MonomX((new BigInteger("67")), 1.0, p),
                           new MonomX((new BigInteger("11")), 2.0, p),
@@ -109,7 +109,7 @@ public class PsiTest {
                           new MonomX((new BigInteger("39")), 10.0, p),
                           new MonomX((new BigInteger("5")), 12.0, p))
                           , PolynomX.createONE(p),p);
-                  Assert.assertEquals("Pside 5", five, poli);
+                  Assert.assertEquals("Pside 5", five, poli);*/
                }
                if(i.compareTo(new BigInteger("5")) > 0){
                    break;

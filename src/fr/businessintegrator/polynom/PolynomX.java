@@ -202,34 +202,23 @@ public class PolynomX extends Polynom implements Cloneable {
             if (value instanceof MonomX) {
                 MonomX monom = (MonomX) value;
                 BigInteger coefficient = monom.getCoef();
-                if (BigInteger.ZERO.compareTo(coefficient) == 0) {
-                    continue;
-                }
                 for (Map.Entry<Double, Monom> currentEntry : getMonoms().entrySet()) {
                     Double currentDegre = currentEntry.getKey();
                     MonomX currentMonomX = (MonomX) currentEntry.getValue();
                     BigInteger currentCoef = currentMonomX.getCoef();
-                    if (BigInteger.ZERO.compareTo(coefficient) == 0) {
-                        continue;
-                    }
+                    
                     Double newdegre = degre + currentDegre;
                     MonomX olderMonomX = (MonomX) result.getMonoms().get(newdegre);
-                    if (olderMonomX != null || BigInteger.ZERO.compareTo(olderMonomX.getCoef()) != 0) {
-                        BigInteger co1 = (currentCoef.multiply(coefficient).multiply(olderMonomX.getCoef())).mod(getP());
-                        //result.getMonoms().put(newdegre, new MonomX(co1, newdegre, getP()));
-                        if (co1.compareTo(BigInteger.ZERO) == 0) {
-                            result.monoms.remove(degre);
-                        } else {
-                            result.monoms.put(degre, new MonomX(co1, degre, getP()));
-                        }
+                    BigInteger co1 = null;
+                    if(olderMonomX != null && olderMonomX.getCoef().compareTo(BigInteger.ZERO)!= 0){
+                         co1 = (currentCoef.multiply(coefficient).add(olderMonomX.getCoef())).mod(getP());
                     } else {
-                        BigInteger co1 = (currentCoef.multiply(coefficient)).mod(getP());
-                        //result.getMonoms().put(newdegre, new MonomX(co1, newdegre, getP()));
-                        if (co1.compareTo(BigInteger.ZERO) == 0) {
-                            result.monoms.remove(degre);
-                        } else {
-                            result.monoms.put(degre, new MonomX(co1, degre, getP()));
-                        }
+                        co1 = (currentCoef.multiply(coefficient)).mod(getP());
+                    }
+                    if (co1.compareTo(BigInteger.ZERO) == 0) {
+                        result.monoms.remove(newdegre);
+                    } else {
+                        result.monoms.put(newdegre, new MonomX(co1, newdegre, getP()));
                     }
                 }
             }
