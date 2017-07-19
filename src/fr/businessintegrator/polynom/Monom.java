@@ -24,17 +24,18 @@ public class Monom {
 
     protected Monom(BigInteger coef, Double degre, BigInteger p) {
         this(p);
-        if(coef.compareTo(p)>0 || coef.compareTo(BigInteger.ZERO)<0){
+        //if(coef.compareTo(p)>0 || coef.compareTo(BigInteger.ZERO)<0){
         this.coef = coef.mod(p);
-        } else {
-           this.coef = coef;
-        }
+        //} else {
+        //   this.coef = coef;
+        //}
         this.degre = degre;
     }
 
     @Override
     public Object clone() throws CloneNotSupportedException {
         return super.clone(); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     public BigInteger getCoef() {
@@ -77,7 +78,11 @@ public class Monom {
         }
         int r = getCoef().compareTo(o.getCoef());
         if (r == 0) {
-            return getDegre().compareTo(o.getDegre());
+            if(getDegre().compareTo(o.getDegre()) == 0){
+                return getP().compareTo(o.getP());
+            } else {
+                return -1;
+            }
         }
         return r;
     }
@@ -91,4 +96,18 @@ public class Monom {
         return hash;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+           
+        return compareToInternal((Monom) obj) ==0;
+    }
+
+    
 }

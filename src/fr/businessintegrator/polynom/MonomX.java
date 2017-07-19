@@ -12,7 +12,7 @@ import java.util.Objects;
  *
  * @author Tiaray RAFARALAHITSIMBA
  */
-public class MonomX extends Monom implements Cloneable {
+public class MonomX extends Monom implements Cloneable,Comparable<MonomX> {
 
   
 
@@ -37,39 +37,14 @@ public class MonomX extends Monom implements Cloneable {
     }
 
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        if (obj instanceof MonomX){
-        final MonomX other = (MonomX) obj;
-        if (!Objects.equals(this.coef, other.coef)) {
-            return false;
-        }
-        if (!Objects.equals(this.degre, other.degre)) {
-            return false;
-        }
-        if (!Objects.equals(this.p, other.p)) {
-            return false;
-        }
-        return true;
-        }
-        return false;
-    }
-  
+    
 
      public PolynomX add(MonomX other) {
         if (this.degre == other.degre) {
             return new PolynomX(p, this, new MonomX(coef.add(other.coef).mod(p), this.degre, p));
         } else {
-            return new PolynomX(p, this, other);
+            return new PolynomX(p, new MonomX(coef, degre, p), other);
+            
         }
     }
 
@@ -78,5 +53,19 @@ public class MonomX extends Monom implements Cloneable {
         return result;
     }
 
+    @Override
+    public int compareTo(MonomX o) {
+        if (o == null){return -1;}
+        if(o == this) {return 0;}
+        if(o.coef.compareTo(coef) == 0 && o.degre.compareTo(degre)== 0 && o.p.compareTo(p)== 0){
+            return 0;
+        }
+        return -1;
+        
+    }
+    
+
+    
+    
     
 }

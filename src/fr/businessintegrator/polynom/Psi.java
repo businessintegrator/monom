@@ -149,7 +149,11 @@ public class Psi {
                 if (DEBUG) {
                     System.out.println("pside(" + i + ") 2.n= 2." + n + "+1 ");
                 }
+                RationalPolynomX nMoins1 = pside(n.subtract(UN), x, y);
                 RationalPolynomX psidn = pside(n, x, y);
+                RationalPolynomX nPlus1 = pside(n.add(UN), x, y);
+                RationalPolynomX nplus2 = pside(n.add(DEUX), x, y);
+                
                 if (DEBUG) {
                     System.out.println("psi(n=" + n + ") =" + psidn);
                 }
@@ -157,13 +161,12 @@ public class Psi {
                 if (DEBUG) {
                     System.out.println("psi(n)^3 =" + nCube);
                 }
-                RationalPolynomX nplus2 = pside(n.add(DEUX), x, y);
                 if (DEBUG) {
                     System.out.println("psi(n+2)" + n.add(DEUX) + "=" + nplus2);
                 }
-                RationalPolynomX other = nplus2.multiply(nCube);
+                RationalPolynomX other = nplus2.multiply(psidn);
 
-                RationalPolynomX nPlus1 = pside(n.add(UN), x, y);
+               
                 if (DEBUG) {
                     System.out.println("psi(n+2)" + n.add(UN) + "=" + nPlus1);
                 }
@@ -171,7 +174,6 @@ public class Psi {
                 if (DEBUG) {
                     System.out.println("psi(n+1=" + n.add(UN) + ")^3 =" + nPlus1Aucube);
                 }
-                RationalPolynomX nMoins1 = pside(n.subtract(UN), x, y);
                 if (DEBUG) {
                     System.out.println("psi(n-1)" + n.subtract(UN) + " =" + nMoins1);
                 }
@@ -429,13 +431,13 @@ public class Psi {
     }
 
     /**
-     * n.Point(x,y) modulo p
+     * Multiplication scalaire n.Point(x,y) modulo p
      *
-     * @param x
-     * @param y
-     * @param p
-     * @param n
-     * @return
+     * @param x coordonnés x
+     * @param y coordonnés y
+     * @param p caractéristique
+     * @param n multiplicteur 
+     * @return Numérateur et dénominateur du polynôme RationalPolynomX psi.
      */
     public RationalPolynomX[] scalar(BigInteger x, BigInteger y, BigInteger n) throws NoCoefficientException, CloneNotSupportedException {
 
@@ -443,11 +445,11 @@ public class Psi {
         RationalPolynomX psidnplus1 = pside(n.add(UN), x, y);
         RationalPolynomX psidnmoins1 = pside(n.subtract(UN), x, y);
         RationalPolynomX psidnmoins2 = pside(n.subtract(DEUX), x, y);
-        PolynomX polynomX = new PolynomX(p, new MonomX(UN, 1.0, p));
-        RationalPolynomX left = new RationalPolynomX(polynomX, PolynomX.createONE(this.p),p);
-        RationalPolynomX right = new RationalPolynomX(psidnmoins1.multiply(psidnplus1), psidn.pow(2, this.p),p);
+       // PolynomX polynomX = new PolynomX(p, new MonomX(UN, 1.0, p));
+        RationalPolynomX nx = new RationalPolynomX((psidn.pow(2, this.p).multiplyX(p).subtract(psidnmoins1.multiply(psidnplus1))), psidn.pow(2, this.p),p);
+        //RationalPolynomX right = new RationalPolynomX(, psidn.pow(2, this.p),p);
 
-        RationalPolynomX nx = left.subtract(right);
+        //RationalPolynomX nx = left.subtract(right);
 
         RationalPolynomX other = pside(n.add(DEUX), x, y).multiply(psidnmoins1.pow(2, this.p));
         RationalPolynomX other2 = psidnmoins2.multiply(psidnplus1.pow(2, this.p));
@@ -456,6 +458,7 @@ public class Psi {
         RationalPolynomX denominateur = psidnCube.multiply(new PolynomX(p, new MonomX(QUATRE.multiply(y), 0.0, p)));
         RationalPolynomX ny = new RationalPolynomX(other.subtract(other2), denominateur,p);
 
+        //return new RationalPolynomX[]{ny, nx};
         return new RationalPolynomX[]{nx, ny};
     }
 

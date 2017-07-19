@@ -17,13 +17,15 @@ public class RationalPolynomX {
     private PolynomX denominateur;
     
 
-    public static RationalPolynomX createZERO(BigInteger p){
+    public static RationalPolynomX createZERO(BigInteger p) throws NoCoefficientException{
         return new RationalPolynomX(PolynomX.createZERO(p), PolynomX.createONE(p),p);
     }
-    public static RationalPolynomX createONE(BigInteger p){
-        return new RationalPolynomX(PolynomX.createONE(p), PolynomX.createONE(p),p);
+    public static RationalPolynomX createONE(BigInteger p) throws NoCoefficientException{
+        PolynomX one = PolynomX.createONE(p);
+        return new RationalPolynomX(one, one,p);
     } 
     private boolean DEBUG = false;
+    private final BigInteger p;
 
     public RationalPolynomX(RationalPolynomX result, PolynomX newdenominateur,BigInteger p) throws NoCoefficientException, CloneNotSupportedException {
         this(result.getNumerateur(),result.getDenominateur().multiply(newdenominateur),p);
@@ -43,10 +45,18 @@ public class RationalPolynomX {
      * 
      * @param pNumerateur
      * @param pDenominateur 
+     * @param p 
+     * 
      */
-    public RationalPolynomX(PolynomX pNumerateur, PolynomX pDenominateur, BigInteger p) {
-        this.numerateur = pNumerateur;
-        this.denominateur = pDenominateur;
+    public RationalPolynomX(PolynomX pNumerateur, PolynomX pDenominateur, BigInteger p) throws NoCoefficientException {
+        this.p = p;
+        if(this.p.equals(pNumerateur.p) && this.p.equals(pDenominateur.p)){
+            this.numerateur = pNumerateur;
+            this.denominateur = pDenominateur;
+        } else {
+            throw new NoCoefficientException("Bad characteristic");
+        }
+        
       
     }
 
@@ -111,9 +121,10 @@ public class RationalPolynomX {
      * @throws CloneNotSupportedException 
      */
      public RationalPolynomX multiply(RationalPolynomX other) throws NoCoefficientException, CloneNotSupportedException{
-        PolynomX newMerator = getNumerateur().multiply(other.getNumerateur());
-        PolynomX newDenoMinator = other.getDenominateur().multiply(getDenominateur());
-        return new RationalPolynomX(newMerator, newDenoMinator,newMerator.getP());
+        if (other == null) return null;
+         PolynomX newMerator = getNumerateur().multiply(other.getNumerateur());
+        PolynomX newDenoMinator = getDenominateur().multiply(other.getDenominateur());
+        return new RationalPolynomX(newMerator, newDenoMinator,getNumerateur().getP());
     }
 
       public BigInteger [] fEven(BigInteger x,BigInteger y) {
@@ -139,41 +150,50 @@ public class RationalPolynomX {
         return   getNumerateur() + "/" + getDenominateur() ;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        return hash;
-    }
+    
 
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
+            System.out.println("fr.businessintegrator.polynom.RationalPolynomX.equals() INST");
             return true;
         }
         if (obj == null) {
             return false;
         }
         if (getClass() != obj.getClass()) {
+            System.out.println("fr.businessintegrator.polynom.RationalPolynomX.equals() CLAZEZE");
             return false;
         }
         final RationalPolynomX other = (RationalPolynomX) obj;
-        if (!Objects.equals(this.numerateur, other.numerateur)) {
-            return false;
+        if (this.numerateur.equals(other.numerateur) && this.denominateur.equals(other.denominateur) ) {
+                    System.out.println("fr.businessintegrator.polynom.RationalPolynomX.equals() EQ");
+            return true;
         }
-        if (!Objects.equals(this.denominateur, other.denominateur)) {
-            return false;
+        if(this.numerateur.equals(this.denominateur)){
+            System.out.println("fr.businessintegrator.polynom.RationalPolynomX.equals() SAME");
+            return other.numerateur.equals(other.denominateur);
         }
-        return true;
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 97 * hash + Objects.hashCode(this.numerateur);
+        hash = 97 * hash + Objects.hashCode(this.denominateur);
+        return hash;
     }
 
     public RationalPolynomX pow(int exponent,BigInteger p) throws NoCoefficientException, CloneNotSupportedException {
        RationalPolynomX result = null;
+       RationalPolynomX current = new RationalPolynomX(getNumerateur(), getDenominateur(),p);
        if(exponent == 0) return createONE(p);
         for (int i = 1; i <= exponent; i++) {
             if(result == null){
-                result = new RationalPolynomX(getNumerateur(), getDenominateur(),p);
+                result = current;
             } else {
-                result = (result.multiply(new RationalPolynomX(getNumerateur(), getDenominateur(),p)));
+                result = result.multiply(current);
             }
         }
        return result;
@@ -189,11 +209,23 @@ public class RationalPolynomX {
       return result;
     }
 
-    RationalPolynomX divideCoefficient(BigInteger coef) {
+    RationalPolynomX divideCoefficient(BigInteger coef) throws NoCoefficientException {
         PolynomX polynomD =  getNumerateur().divideByScalar(coef);
         return new RationalPolynomX(polynomD, getDenominateur(),polynomD.getP());
     }
-     
+
+    RationalPolynomX multiplyX(BigInteger p) throws NoCoefficientException, CloneNotSupportedException {
+
+       RationalPolynomX result = new RationalPolynomX(getNumerateur().multiplyX(), getDenominateur(),p);
+       return result;
+    }
+
+    public BigInteger getP() {
+        return p;
+    }
+
+    
+    
     
     
      

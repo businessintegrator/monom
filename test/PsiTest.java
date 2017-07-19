@@ -7,6 +7,8 @@ import fr.businessintegrator.polynom.PolynomY;
 import fr.businessintegrator.polynom.Psi;
 import fr.businessintegrator.polynom.RationalPolynomX;
 import java.math.BigInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -26,6 +28,7 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 @RunWith(BlockJUnit4ClassRunner.class)
 public class PsiTest {
 
+
     @Test
    public void test0(){
        
@@ -36,6 +39,11 @@ public class PsiTest {
        BigInteger x =  new BigInteger("4");
        BigInteger y =  new BigInteger("15");
         System.out.println("PsiTest.test0() 1");
+        RationalPolynomX one =null;
+         RationalPolynomX two=null;
+         RationalPolynomX three  = null;
+          RationalPolynomX foury4 = null;
+         
        for (BigInteger i = BigInteger.ONE; i.compareTo(p) < 0; i = i.add(BigInteger.ONE)) {
            try {
                RationalPolynomX poli = psi.pside(i, x, y);
@@ -43,19 +51,19 @@ public class PsiTest {
                if(i.compareTo(BigInteger.ONE) == 0){
                    System.out.println("PsiTest.test0() 2");
                    Assert.assertTrue("1", true);
-                  RationalPolynomX one = new RationalPolynomX(PolynomX.createONE(p), PolynomX.createONE(p),p);
+                   one = new RationalPolynomX(PolynomX.createONE(p), PolynomX.createONE(p),p);
                   Assert.assertEquals("Pside 1", one, poli);
                }
                if(i.compareTo(new BigInteger("2")) == 0){
                    System.out.println("PsiTest.test0() 3");
                    Assert.assertTrue("2", true);
-                  RationalPolynomX two  = new RationalPolynomX(new PolynomX(p,new MonomX(y.multiply(new BigInteger("2")), 0.0, p)), PolynomX.createONE(p),p);
+                   two  = new RationalPolynomX(new PolynomX(p,new MonomX(y.multiply(new BigInteger("2")), 0.0, p)), PolynomX.createONE(p),p);
                   Assert.assertEquals("Pside 2", two, poli);
                }
                if(i.compareTo(new BigInteger("3")) == 0){
                    System.out.println("PsiTest.test0() 4");
                    Assert.assertTrue("3", true);
-                  RationalPolynomX three  = new RationalPolynomX(new PolynomX(p,
+                   three  = new RationalPolynomX(new PolynomX(p,
                           new MonomX((new BigInteger("18")), 0.0, p),
                           new MonomX((new BigInteger("15")), 1.0, p),
                           new MonomX((new BigInteger("82")), 2.0, p),
@@ -78,12 +86,15 @@ public class PsiTest {
                           , PolynomX.createONE(p),p);
                   
                    PolynomX nzwnum = four.getNumerateur().multiply(y4);
-                  RationalPolynomX foury4 = new RationalPolynomX(nzwnum, PolynomX.createONE(p),p);
+                   foury4 = new RationalPolynomX(nzwnum, PolynomX.createONE(p),p);
                   Assert.assertEquals("Pside 4"+poli, foury4, poli);
                }
                if(i.compareTo(new BigInteger("5")) == 0){
                    System.out.println("PsiTest.test0() 5");
                    Assert.assertTrue("5", true);
+                   RationalPolynomX five5 = foury4.multiply(two);
+                   RationalPolynomX five55 = five5.subtract(three.pow(3, p));
+                   Assert.assertEquals("Pside 5", five55, poli);
                   RationalPolynomX five  = new RationalPolynomX(new PolynomX(p,
                           new MonomX((new BigInteger("23")), 0.0, p),
                           new MonomX((new BigInteger("67")), 1.0, p),
@@ -98,11 +109,13 @@ public class PsiTest {
                           new MonomX((new BigInteger("39")), 10.0, p),
                           new MonomX((new BigInteger("5")), 12.0, p))
                           , PolynomX.createONE(p),p);
-                  Assert.assertEquals("Pside 5"+poli, five, poli);
+                  Assert.assertEquals("Pside 5", five, poli);
                }
-               System.out.println("PsiTest.test0() 5");
+               if(i.compareTo(new BigInteger("5")) > 0){
+                   break;
+               }
                
-           } catch (NoCoefficientException ex) {
+            } catch (NoCoefficientException ex) {
                ex.printStackTrace();
            } catch (CloneNotSupportedException ex) {
                ex.printStackTrace();

@@ -159,7 +159,7 @@ public class PolynomX extends Polynom implements Cloneable {
         for (Map.Entry<Double, Monom> entry : getMonoms().entrySet()) {
             Double degre = entry.getKey();
             MonomX monom = (MonomX) entry.getValue();
-            result.monoms.put(degre, (MonomX) monom.clone());
+            result.monoms.put(degre, monom);
         }
         for (Map.Entry<Double, Monom> entry : other.getMonoms().entrySet()) {
             Double degre = entry.getKey();
@@ -171,7 +171,13 @@ public class PolynomX extends Polynom implements Cloneable {
                 if (currentMonomX == null) {
                     result.monoms.put(degre, new MonomX(BigInteger.ZERO.subtract(coef), degre, getP()));
                 } else {
-                    result.monoms.put(degre, new MonomX(currentMonomX.getCoef().subtract(coef), degre, getP()));
+                    BigInteger scof = currentMonomX.getCoef().subtract(coef);
+                    if (scof.compareTo(BigInteger.ZERO) == 0) {
+                        result.monoms.remove(degre);
+                    } else {
+                        result.monoms.put(degre, new MonomX(scof, degre, getP()));
+
+                    }
                 }
             }
         }
@@ -180,15 +186,15 @@ public class PolynomX extends Polynom implements Cloneable {
     }
 
     public PolynomX multiply(PolynomX other) throws NoCoefficientException, CloneNotSupportedException {
-        if (other instanceof PolynomY) {
-            PolynomX result = (PolynomX)clone();
+        /*if (other instanceof PolynomY) {
+            PolynomX result = (PolynomX) clone();
             if (result.products == null) {
                 result.products = new LinkedList<PolynomY>();
             }
-             result.products.add((PolynomY) other);
-             return result;
-        }
-        
+            result.products.add((PolynomY) other);
+            return result;
+        }*/
+
         PolynomX result = new PolynomX(this.getP(), null);
         for (Map.Entry<Double, Monom> entry : other.getMonoms().entrySet()) {
             Double degre = entry.getKey();
@@ -209,11 +215,22 @@ public class PolynomX extends Polynom implements Cloneable {
                     Double newdegre = degre + currentDegre;
                     MonomX olderMonomX = (MonomX) result.getMonoms().get(newdegre);
                     if (olderMonomX != null) {
-                        BigInteger co1 = (currentCoef.multiply(coefficient).add(olderMonomX.getCoef())).mod(getP());
-                        result.monoms.put(newdegre, new MonomX(co1, degre + currentDegre, getP()));
+                        BigInteger co1 = (currentCoef.multiply(coefficient).multiply(olderMonomX.getCoef())).mod(getP());
+                        //result.getMonoms().put(newdegre, new MonomX(co1, newdegre, getP()));
+                        
+                        if (co1.compareTo(BigInteger.ZERO) == 0) {
+                    result.monoms.remove(degre);
+                } else {
+                    result.monoms.put(degre, new MonomX(co1, degre, getP()));
+                }
                     } else {
                         BigInteger co1 = (currentCoef.multiply(coefficient)).mod(getP());
-                        result.monoms.put(newdegre, new MonomX(co1, degre + currentDegre, getP()));
+                        //result.getMonoms().put(newdegre, new MonomX(co1, newdegre, getP()));
+                         if (co1.compareTo(BigInteger.ZERO) == 0) {
+                    result.monoms.remove(degre);
+                } else {
+                    result.monoms.put(degre, new MonomX(co1, degre, getP()));
+                }
                     }
                 }
             }
@@ -491,10 +508,10 @@ public class PolynomX extends Polynom implements Cloneable {
                 if (!value.equals(other2)) {
                     return false;
                 }
+            } else {
+                return false;
             }
-
         }
-
         return true;
     }
 
@@ -510,6 +527,7 @@ public class PolynomX extends Polynom implements Cloneable {
                 result = result.add(cof.multiply(x.modPow(new BigInteger("" + key.intValue()), getP())));
             }
         }
+        if(result == null){ return null;}
         return result.mod(getP());
     }
 
@@ -549,6 +567,23 @@ public class PolynomX extends Polynom implements Cloneable {
 
     public void setProducts(LinkedList<PolynomY> products) {
         this.products = products;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone(); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    PolynomX multiplyX() {
+   
+         PolynomX result = new PolynomX(this.getP(), null);
+        for (Map.Entry<Double, Monom> entry : getMonoms().entrySet()) {
+            Double degre = entry.getKey();
+            MonomX monom = (MonomX) entry.getValue();
+            result.monoms.put(degre+1, monom);
+        }
+       return result;
+    
     }
 
 }
